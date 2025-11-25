@@ -31,9 +31,6 @@ A modern web application for collecting and exploring Chinese quotes with beauti
   - File storage
   - Real-time capabilities
 
-### Deployment
-- **Vercel** - Frontend hosting
-
 ## 🚀 Getting Started
 
 ### Prerequisites
@@ -84,106 +81,6 @@ A modern web application for collecting and exploring Chinese quotes with beauti
    
    Open [http://localhost:5173](http://localhost:5173) in your browser.
 
-## 📦 Project Structure
-
-```
-flashh-card/
-├── frontend/
-│   ├── src/
-│   │   ├── components/        # React components
-│   │   │   ├── ui/           # UI components (Footer, etc.)
-│   │   │   ├── AddQuoteForm.tsx
-│   │   │   ├── GooeyNav.tsx
-│   │   │   └── hero-section-3.tsx
-│   │   ├── pages/            # Page components
-│   │   │   ├── CollectionPage.tsx
-│   │   │   ├── QuoteDetailPage.tsx
-│   │   │   └── WordsPage.tsx
-│   │   ├── services/         # API services
-│   │   │   └── quoteService.ts
-│   │   ├── App.tsx           # Main app component
-│   │   ├── supabase.ts       # Supabase client
-│   │   └── main.tsx          # Entry point
-│   ├── public/               # Static assets
-│   ├── package.json
-│   └── vite.config.ts
-├── database/
-│   └── quotes_table.sql      # Database schema
-├── DEPLOYMENT.md             # Deployment guide
-├── SUPABASE_SETUP.md         # Supabase setup guide
-└── README.md                 # This file
-```
-
-## 📝 Usage
-
-### Adding a Quote
-
-1. Navigate to the Collection page
-2. Click "+ Add Quote" button
-3. Fill in:
-   - Quote text (Chinese)
-   - Meaning/Translation
-   - Image (optional)
-4. Click "Add Quote"
-
-### Viewing Quotes
-
-- **Home Page**: Preview of the first 4 quotes
-- **Collection Page**: Full grid of all quotes
-- **Detail Page**: Click any quote to see full details
-
-## 🔧 Available Scripts
-
-```bash
-# Development
-npm run dev          # Start dev server
-
-# Build
-npm run build        # Build for production
-npm run preview      # Preview production build
-
-# Linting
-npm run lint         # Run ESLint
-```
-
-## 🌐 Deployment
-
-### Deploy to Vercel
-
-1. **Using the deployment script**:
-   ```powershell
-   .\deploy.ps1
-   ```
-
-2. **Or manually**:
-   - Push code to GitHub
-   - Import repository in Vercel
-   - Configure:
-     - Root Directory: `frontend`
-     - Build Command: `npm run build`
-     - Output Directory: `dist`
-   - Add environment variables
-   - Deploy!
-
-See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed instructions.
-
-## 🗄️ Database Schema
-
-### Quotes Table
-
-| Column     | Type         | Description                    |
-|------------|--------------|--------------------------------|
-| id         | UUID         | Primary key                    |
-| text       | TEXT         | Chinese quote text             |
-| meaning    | TEXT         | Translation/meaning            |
-| image_url  | TEXT         | Optional image URL             |
-| created_at | TIMESTAMPTZ  | Creation timestamp             |
-
-### Storage Bucket
-
-- **Name**: `quote-images`
-- **Type**: Public
-- **Purpose**: Store quote images
 
 ## 🎨 Features in Detail
 
