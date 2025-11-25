@@ -1,0 +1,17 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="32" cy="32" r="32" fill="#1b1b1b"/>
+  
+  <!-- Card shape -->
+  <rect x="14" y="18" width="36" height="28" rx="3" fill="#2a2a2a" stroke="#4fd1c5" stroke-width="2"/>
+  
+  <!-- Chinese character style lines -->
+  <line x1="22" y1="26" x2="42" y2="26" stroke="#4fd1c5" stroke-width="2" stroke-linecap="round"/>
+  <line x1="22" y1="32" x2="38" y2="32" stroke="#4fd1c5" stroke-width="2" stroke-linecap="round"/>
+  <line x1="22" y1="38" x2="40" y2="38" stroke="#4fd1c5" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/>
+  
+  <!-- Sparkle/Flash effect -->
+  <circle cx="46" cy="20" r="2" fill="#4fd1c5"/>
+  <circle cx="50" cy="24" r="1.5" fill="#4fd1c5" opacity="0.7"/>
+  <circle cx="44" cy="24" r="1" fill="#4fd1c5" opacity="0.5"/>
+</svg>
