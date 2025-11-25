@@ -113,10 +113,10 @@ export const QuoteDetailPage: React.FC = () => {
             </div>
 
             {/* Metadata */}
-            {quote.createdAt && (
+            {quote.created_at && (
               <div className="pt-6 border-t border-gray-700">
                 <p className="text-sm text-gray-500">
-                  Added on {new Date(quote.createdAt.toDate()).toLocaleDateString()}
+                  Added on {new Date(quote.created_at).toLocaleDateString()}
                 </p>
               </div>
             )}

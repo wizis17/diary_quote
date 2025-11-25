@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getWordById, Word } from '../services/wordService';
+import { getWordById, type Word } from '../services/wordService';
 import { ArrowLeft } from 'lucide-react';
 
 export const WordDetailPage: React.FC = () => {
@@ -79,10 +79,10 @@ export const WordDetailPage: React.FC = () => {
         {/* Main Content */}
         <div className="bg-[#2a2a2a] rounded-xl border border-gray-700 overflow-hidden">
           {/* Image Section (if available) */}
-          {word.imageUrl && (
+          {word.image_url && (
             <div className="w-full h-64 bg-gradient-to-br from-[#144272] to-[#1d8496] flex items-center justify-center">
               <img
-                src={word.imageUrl}
+                src={word.image_url}
                 alt={word.chinese_word}
                 className="w-full h-full object-cover"
                 onError={(e) => {
@@ -127,11 +127,11 @@ export const WordDetailPage: React.FC = () => {
               </div>
             )}
 
-            {/* Metadata */}
-            {word.createdAt && (
-              <div className="pt-6 border-t border-gray-700">
+            {/* Date Added */}
+            {word.created_at && (
+              <div className="mt-6 pt-6 border-t border-gray-700">
                 <p className="text-sm text-gray-500">
-                  Added on {new Date(word.createdAt.toDate()).toLocaleDateString()}
+                  Added on {new Date(word.created_at).toLocaleDateString()}
                 </p>
               </div>
             )}

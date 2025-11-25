@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { AnimatedGroup } from '@/components/ui/animated-group'
-import { cn } from '@/lib/utils'
 import GooeyNav from './GooeyNav'
 import { getQuotes, type Quote } from '../services/quoteService'
 import { useNavigate } from 'react-router-dom'

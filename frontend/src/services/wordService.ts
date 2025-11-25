@@ -1,16 +1,4 @@
-import { 
-  collection, 
-  addDoc, 
-  getDocs,
-  getDoc,
-  doc, 
-  updateDoc, 
-  deleteDoc,
-  query,
-  orderBy,
-  Timestamp 
-} from 'firebase/firestore';
-import { db } from '../firebase';
+import { supabase } from '../supabase';
 
 export interface Word {
   id?: string;
@@ -19,23 +7,22 @@ export interface Word {
   meaning: string;           // English or Khmer meaning
   part_of_speech?: string;   // noun, verb, adjective, etc.
   example?: string;          // Example sentence
-  imageUrl?: string;         // Optional image URL
-  createdAt?: Timestamp;
+  image_url?: string;        // Optional image URL
+  created_at?: string;
 }
 
-const COLLECTION_NAME = 'words';
+const TABLE_NAME = 'words';
 
 // Get all words
 export const getWords = async (): Promise<Word[]> => {
   try {
-    const wordsRef = collection(db, COLLECTION_NAME);
-    const q = query(wordsRef, orderBy('createdAt', 'desc'));
-    const querySnapshot = await getDocs(q);
+    const { data, error } = await supabase
+      .from(TABLE_NAME)
+      .select('*')
+      .order('created_at', { ascending: false });
     
-    return querySnapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    } as Word));
+    if (error) throw error;
+    return data || [];
   } catch (error) {
     console.error('Error fetching words:', error);
     throw error;
@@ -45,16 +32,14 @@ export const getWords = async (): Promise<Word[]> => {
 // Get a single word by ID
 export const getWordById = async (id: string): Promise<Word | null> => {
   try {
-    const wordRef = doc(db, COLLECTION_NAME, id);
-    const wordDoc = await getDoc(wordRef);
+    const { data, error } = await supabase
+      .from(TABLE_NAME)
+      .select('*')
+      .eq('id', id)
+      .single();
     
-    if (wordDoc.exists()) {
-      return {
-        id: wordDoc.id,
-        ...wordDoc.data()
-      } as Word;
-    }
-    return null;
+    if (error) throw error;
+    return data;
   } catch (error) {
     console.error('Error fetching word:', error);
     throw error;
@@ -62,13 +47,19 @@ export const getWordById = async (id: string): Promise<Word | null> => {
 };
 
 // Add a new word
-export const addWord = async (word: Omit<Word, 'id' | 'createdAt'>): Promise<string> => {
+export const addWord = async (word: Omit<Word, 'id' | 'created_at'>): Promise<string> => {
   try {
-    const docRef = await addDoc(collection(db, COLLECTION_NAME), {
-      ...word,
-      createdAt: Timestamp.now()
-    });
-    return docRef.id;
+    const { data, error } = await supabase
+      .from(TABLE_NAME)
+      .insert([{
+        ...word,
+        created_at: new Date().toISOString()
+      }])
+      .select()
+      .single();
+    
+    if (error) throw error;
+    return data.id;
   } catch (error) {
     console.error('Error adding word:', error);
     throw error;
@@ -78,8 +69,12 @@ export const addWord = async (word: Omit<Word, 'id' | 'createdAt'>): Promise<str
 // Update a word
 export const updateWord = async (id: string, word: Partial<Word>): Promise<void> => {
   try {
-    const wordRef = doc(db, COLLECTION_NAME, id);
-    await updateDoc(wordRef, word);
+    const { error } = await supabase
+      .from(TABLE_NAME)
+      .update(word)
+      .eq('id', id);
+    
+    if (error) throw error;
   } catch (error) {
     console.error('Error updating word:', error);
     throw error;
@@ -89,7 +84,12 @@ export const updateWord = async (id: string, word: Partial<Word>): Promise<void>
 // Delete a word
 export const deleteWord = async (id: string): Promise<void> => {
   try {
-    await deleteDoc(doc(db, COLLECTION_NAME, id));
+    const { error } = await supabase
+      .from(TABLE_NAME)
+      .delete()
+      .eq('id', id);
+    
+    if (error) throw error;
   } catch (error) {
     console.error('Error deleting word:', error);
     throw error;
