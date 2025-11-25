@@ -1,7 +1,8 @@
 import { 
   collection, 
   addDoc, 
-  getDocs, 
+  getDocs,
+  getDoc,
   doc, 
   updateDoc, 
   deleteDoc,
@@ -9,13 +10,16 @@ import {
   orderBy,
   Timestamp 
 } from 'firebase/firestore';
-import { db } from './firebase';
+import { db } from '../firebase';
 
 export interface Word {
   id?: string;
-  word: string;
-  meaning: string;
-  example?: string;
+  chinese_word: string;      // Chinese characters
+  pinyin?: string;           // Pronunciation (e.g., "nǐ hǎo")
+  meaning: string;           // English or Khmer meaning
+  part_of_speech?: string;   // noun, verb, adjective, etc.
+  example?: string;          // Example sentence
+  imageUrl?: string;         // Optional image URL
   createdAt?: Timestamp;
 }
 
@@ -34,6 +38,25 @@ export const getWords = async (): Promise<Word[]> => {
     } as Word));
   } catch (error) {
     console.error('Error fetching words:', error);
+    throw error;
+  }
+};
+
+// Get a single word by ID
+export const getWordById = async (id: string): Promise<Word | null> => {
+  try {
+    const wordRef = doc(db, COLLECTION_NAME, id);
+    const wordDoc = await getDoc(wordRef);
+    
+    if (wordDoc.exists()) {
+      return {
+        id: wordDoc.id,
+        ...wordDoc.data()
+      } as Word;
+    }
+    return null;
+  } catch (error) {
+    console.error('Error fetching word:', error);
     throw error;
   }
 };

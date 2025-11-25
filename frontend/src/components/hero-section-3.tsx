@@ -1,15 +1,10 @@
-import React from 'react'
-import { Menu, X } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { useEffect, useState } from 'react'
 import { AnimatedGroup } from '@/components/ui/animated-group'
 import { cn } from '@/lib/utils'
-
-// Simple Link component for non-Next.js projects
-const Link = ({ href, children, className, ...props }: any) => (
-    <a href={href} className={className} {...props}>
-        {children}
-    </a>
-)
+import GooeyNav from './GooeyNav'
+import { getQuotes, type Quote } from '../services/quoteService'
+import { useNavigate } from 'react-router-dom'
+import { Footer } from './ui/Footer'
 
 const transitionVariants = {
     item: {
@@ -82,17 +77,135 @@ export function HeroSection() {
                         </div>
                     </div>
                 </section>
+
+                {/* Collection Preview Section */}
+                <CollectionPreview />
             </main>
+            
+            <Footer />
         </>
     )
 }
+
+const CollectionPreview = () => {
+    const [quotes, setQuotes] = useState<Quote[]>([]);
+    const [loading, setLoading] = useState(true);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const fetchQuotes = async () => {
+            try {
+                const quotesData = await getQuotes();
+                setQuotes(quotesData.slice(0, 4)); // Only show first 4
+            } catch (error) {
+                console.error('Error fetching quotes:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchQuotes();
+    }, []);
+
+    if (loading) {
+        return (
+            <section id="collection" className="py-20 px-6">
+                <div className="max-w-6xl mx-auto">
+                    <div className="flex justify-center items-center py-20">
+                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#4fd1c5]"></div>
+                    </div>
+                </div>
+            </section>
+        );
+    }
+
+    return (
+        <section id="collection" className="py-20 px-6">
+            <div className="max-w-6xl mx-auto">
+                <div className="text-center mb-12">
+                    <h2 className="text-4xl font-bold text-white mb-4">Collection Preview</h2>
+                    <p className="text-gray-400 text-lg">Explore our collection of Chinese wisdom</p>
+                </div>
+
+                {quotes.length === 0 ? (
+                    <div className="text-center bg-gray-800/20 rounded-lg p-16 border border-gray-700">
+                        <p className="text-gray-400 text-lg mb-6">No quotes in collection yet.</p>
+                        <button
+                            onClick={() => navigate('/collection')}
+                            className="px-8 py-3 bg-[#4fd1c5] hover:bg-[#3db8a8] text-[#1b1b1b] font-semibold rounded-lg transition-colors shadow-lg"
+                        >
+                            View All 
+                        </button>
+                    </div>
+                ) : (
+                    <>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                            {quotes.map((quote, index) => (
+                                <div
+                                    key={quote.id}
+                                    onClick={() => navigate(`/quote/${quote.id}`)}
+                                    className="bg-[#2a2a2a] rounded-xl border border-gray-700 overflow-hidden hover:border-[#4fd1c5] transition-all duration-300 group cursor-pointer"
+                                >
+                                    {index === 0 ? (
+                                        <div className="flex h-full">
+                                            <div className="flex-1 p-4 flex flex-col justify-between">
+                                                <div>
+                                                    <span className="text-xs text-gray-500 uppercase tracking-wide">Text</span>
+                                                    <h3 className="text-xl font-bold text-white mt-2 mb-2 line-clamp-3">
+                                                        {quote.text}
+                                                    </h3>
+                                                    <p className="text-sm text-gray-300 line-clamp-2">{quote.meaning}</p>
+                                                </div>
+                                            </div>
+                                            <div className="w-32 bg-gradient-to-br from-[#144272] to-[#1d8496] flex items-center justify-center relative overflow-hidden">
+                                                {quote.image_url ? (
+                                                    <img
+                                                        src={quote.image_url}
+                                                        alt={quote.text}
+                                                        className="w-full h-full object-cover"
+                                                        onError={(e) => {
+                                                            e.currentTarget.style.display = 'none';
+                                                        }}
+                                                    />
+                                                ) : (
+                                                    <span className="text-white/30 text-xs">Image</span>
+                                                )}
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <div className="p-4 h-full flex flex-col justify-between">
+                                            <div>
+                                                <h3 className="text-xl font-bold text-white mb-2 line-clamp-4">
+                                                    {quote.text}
+                                                </h3>
+                                                <p className="text-sm text-gray-300 line-clamp-3">{quote.meaning}</p>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+
+                        <div className="text-center">
+                            <button
+                                onClick={() => navigate('/collection')}
+                                className="px-8 py-3 bg-[#4fd1c5] hover:bg-[#3db8a8] text-[#1b1b1b] font-semibold rounded-lg transition-colors shadow-lg"
+                            >
+                                View All Quotes
+                            </button>
+                        </div>
+                    </>
+                )}
+            </div>
+        </section>
+    );
+};
 
 const AppComponent = () => {
     return (
         <div className="relative space-y-3 rounded-[1rem] bg-white/5 p-4">
             <div className="flex items-center gap-1.5 text-orange-400">
                 <svg
-                    className="size-5"
+                    className="size-6"
                     xmlns="http://www.w3.org/2000/svg"
                     width="1em"
                     height="1em"
@@ -109,21 +222,22 @@ const AppComponent = () => {
                 <div className="text-sm font-medium">Steps</div>
             </div>
             <div className="space-y-3">
-                <div className="text-foreground border-b border-white/10 pb-3 text-sm font-medium">This year, you're walking more on average than you did in 2023.</div>
+                <div className="text-foreground border-b border-white/10 pb-3 text-sm font-medium">“千里之行，始于足下。”<br />
+                A journey of a thousand miles begins with a single step.</div>
                 <div className="space-y-3">
                     <div className="space-y-1">
                         <div className="space-x-1">
-                            <span className="text-foreground align-baseline text-xl font-medium">8,081</span>
+                            <span className="text-foreground align-baseline text-xl font-medium">67</span>
                             <span className="text-muted-foreground text-xs">Steps/day</span>
                         </div>
-                        <div className="flex h-5 items-center rounded bg-gradient-to-l from-emerald-400 to-indigo-600 px-2 text-xs text-white">2024</div>
+                        <div className="flex h-5 items-center rounded bg-gradient-to-l from-emerald-400 to-indigo-600 px-2 text-xs text-white">2025</div>
                     </div>
                     <div className="space-y-1">
                         <div className="space-x-1">
-                            <span className="text-foreground align-baseline text-xl font-medium">5,412</span>
+                            <span className="text-foreground align-baseline text-xl font-medium">127</span>
                             <span className="text-muted-foreground text-xs">Steps/day</span>
                         </div>
-                        <div className="text-foreground bg-muted flex h-5 w-2/3 items-center rounded px-2 text-xs dark:bg-white/20">2023</div>
+                        <div className="text-foreground bg-muted flex h-5 w-2/3 items-center rounded px-2 text-xs dark:bg-white/20">2024</div>
                     </div>
                 </div>
             </div>
@@ -131,99 +245,27 @@ const AppComponent = () => {
     )
 }
 
-const menuItems = [
-    { name: 'Home', href: '#link' },
-    { name: 'Words', href: '#link' },
-    { name: 'Quotes', href: '#link' },
-    { name: 'About', href: '#link' },
-]
-
 const HeroHeader = () => {
-    const [menuState, setMenuState] = React.useState(false)
-    const [isScrolled, setIsScrolled] = React.useState(false)
-
-    React.useEffect(() => {
-        const handleScroll = () => {
-            setIsScrolled(window.scrollY > 50)
-        }
-        window.addEventListener('scroll', handleScroll)
-        return () => window.removeEventListener('scroll', handleScroll)
-    }, [])
+    const navItems = [
+        { label: 'Home', href: '/' },
+        { label: 'Collection', href: '#collection' },
+        { label: 'About', href: '#about' },
+    ];
 
     return (
-        <header>
-            <nav
-                data-state={menuState && 'active'}
-                className="fixed group z-20 w-full px-2">
-                <div className={cn('mx-auto mt-2 max-w-6xl px-6 transition-all duration-300 lg:px-12', isScrolled && 'bg-background/50 max-w-4xl rounded-2xl border backdrop-blur-lg lg:px-5')}>
-                    <div className="relative flex flex-wrap items-center justify-between gap-6 py-3 lg:gap-0 lg:py-4">
-                        <div className="flex w-full justify-between lg:w-auto">
-                            <Link
-                                href="/"
-                                aria-label="home"
-                                className="flex items-center space-x-2">
-                                <Logo />
-                            </Link>
-
-                            <button
-                                onClick={() => setMenuState(!menuState)}
-                                aria-label={menuState == true ? 'Close Menu' : 'Open Menu'}
-                                className="relative z-20 -m-2.5 -mr-4 block cursor-pointer p-2.5 lg:hidden">
-                                <Menu className="group-data-[state=active]:rotate-180 group-data-[state=active]:scale-0 group-data-[state=active]:opacity-0 m-auto size-6 duration-200" />
-                                <X className="group-data-[state=active]:rotate-0 group-data-[state=active]:scale-100 group-data-[state=active]:opacity-100 absolute inset-0 m-auto size-6 -rotate-180 scale-0 opacity-0 duration-200" />
-                            </button>
-                        </div>
-
-                        <div className="absolute inset-0 m-auto hidden size-fit lg:block">
-                            <ul className="flex gap-8 text-sm">
-                                {menuItems.map((item, index) => (
-                                    <li key={index}>
-                                        <Link
-                                            href={item.href}
-                                            className="text-gray-400 hover:text-[#4fd1c5] block duration-200 transition-colors">
-                                            <span>{item.name}</span>
-                                        </Link>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-
-                        <div className="bg-background group-data-[state=active]:block lg:group-data-[state=active]:flex mb-6 hidden w-full flex-wrap items-center justify-end space-y-8 rounded-3xl border p-6 shadow-2xl shadow-zinc-300/20 md:flex-nowrap lg:m-0 lg:flex lg:w-fit lg:gap-6 lg:space-y-0 lg:border-transparent lg:bg-transparent lg:p-0 lg:shadow-none dark:shadow-none dark:lg:bg-transparent">
-                            <div className="lg:hidden">
-                                <ul className="space-y-6 text-base">
-                                    {menuItems.map((item, index) => (
-                                        <li key={index}>
-                                            <Link
-                                                href={item.href}
-                                                className="text-gray-400 hover:text-[#144272] s block duration-200 transition-colors">
-                                                <span>{item.name}</span>
-                                            </Link>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
-                            <div className="flex w-full flex-col space-y-3 sm:flex-row sm:gap-3 sm:space-y-0 md:w-fit">
-                                <Button
-                                    asChild
-                                    size="sm"
-                                    className={cn(isScrolled ? 'lg:inline-flex' : 'hidden', '!bg-[#1f1f1f] hover:!bg-[#2a2a2a] !border !border-gray-700 !text-white transition-colors duration-200')}>
-                                    <Link href="#">
-                                        <span>Get Started</span>
-                                    </Link>
-                                </Button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </nav>
+        <header className="absolute top-0 left-0 right-0 z-50 pt-8">
+            <div className="flex justify-center items-center max-w-6xl mx-auto px-6">
+                <GooeyNav
+                    items={navItems}
+                    particleCount={15}
+                    particleDistances={[90, 10]}
+                    particleR={100}
+                    initialActiveIndex={0}
+                    animationTime={600}
+                    timeVariance={300}
+                    colors={[1, 2, 3, 1, 2, 3, 1, 4]}
+                />
+            </div>
         </header>
-    )
-}
-
-const Logo = ({ className }: { className?: string }) => {
-    return (
-        <span className={cn('text-2xl font-bold bg-gradient-to-r from-[#144272] to-[#1d8496] bg-clip-text text-transparent', className)}>
-            xiaochen!
-        </span>
-    )
-}
+    );
+};

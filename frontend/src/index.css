@@ -11,8 +11,8 @@
   font-weight: 400;
 
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #1a2332;
+  color: rgba(255, 255, 255, 0.9);
+  background-color: #000000;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -22,11 +22,11 @@
 
 a {
   font-weight: 500;
-  color: #646cff;
+  color: #4fd1c5;
   text-decoration: inherit;
 }
 a:hover {
-  color: #535bf2;
+  color: #63b3ed;
 }
 
 body {
@@ -77,6 +77,10 @@ button:focus-visible {
 
 @layer base {
   :root {
+    --color-1: #4fd1c5;
+    --color-2: #63b3ed;
+    --color-3: #144272;
+    --color-4: #1d8496;
     --background: 0 0% 100%;
     --foreground: 0 0% 3.9%;
     --card: 0 0% 100%;
