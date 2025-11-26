@@ -3,6 +3,10 @@ export default {
     content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
   	extend: {
+  		fontFamily: {
+  			'noto-serif-sc': ['"Noto Serif SC"', 'serif'],
+  			'chinese': ['"Noto Serif SC"', 'serif'],
+  		},
   		borderRadius: {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',
