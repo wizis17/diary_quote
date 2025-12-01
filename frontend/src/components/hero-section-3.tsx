@@ -138,48 +138,37 @@ const CollectionPreview = () => {
                 ) : (
                     <>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                            {quotes.map((quote, index) => (
+                            {quotes.map((quote) => (
                                 <div
                                     key={quote.id}
                                     onClick={() => navigate(`/quote/${quote.id}`)}
                                     className="bg-[#2a2a2a] rounded-xl border border-gray-700 overflow-hidden hover:border-[#4fd1c5] transition-all duration-300 group cursor-pointer"
                                 >
-                                    {index === 0 ? (
-                                        <div className="flex h-full">
-                                            <div className="flex-1 p-4 flex flex-col justify-between">
-                                                <div>
-                                                    <span className="text-xs text-gray-500 uppercase tracking-wide">Text</span>
-                                                    <h3 className="text-xl font-bold text-white mt-2 mb-2 line-clamp-3">
-                                                        {quote.text}
-                                                    </h3>
-                                                    <p className="text-sm text-gray-300 line-clamp-2">{quote.meaning}</p>
-                                                </div>
-                                            </div>
-                                            <div className="w-32 bg-gradient-to-br from-[#144272] to-[#1d8496] flex items-center justify-center relative overflow-hidden">
-                                                {quote.image_url ? (
-                                                    <img
-                                                        src={quote.image_url}
-                                                        alt={quote.text}
-                                                        className="w-full h-full object-cover"
-                                                        onError={(e) => {
-                                                            e.currentTarget.style.display = 'none';
-                                                        }}
-                                                    />
-                                                ) : (
-                                                    <span className="text-white/30 text-xs">Image</span>
-                                                )}
-                                            </div>
-                                        </div>
-                                    ) : (
-                                        <div className="p-4 h-full flex flex-col justify-between">
+                                    <div className="flex h-full">
+                                        <div className="flex-1 p-4 flex flex-col justify-between">
                                             <div>
-                                                <h3 className="text-xl font-bold text-white mb-2 line-clamp-4">
+                                                <span className="text-xs text-gray-500 uppercase tracking-wide">Quote</span>
+                                                <h3 className="text-xl font-bold text-white mt-2 mb-2 line-clamp-3 font-chinese">
                                                     {quote.text}
                                                 </h3>
-                                                <p className="text-sm text-gray-300 line-clamp-3">{quote.meaning}</p>
+                                                <p className="text-sm text-gray-300 line-clamp-2">{quote.meaning}</p>
                                             </div>
                                         </div>
-                                    )}
+                                        <div className="w-32 bg-gradient-to-br from-[#144272] to-[#1d8496] flex items-center justify-center relative overflow-hidden">
+                                            {quote.image_url ? (
+                                                <img
+                                                    src={quote.image_url}
+                                                    alt={quote.text}
+                                                    className="w-full h-full object-cover"
+                                                    onError={(e) => {
+                                                        e.currentTarget.style.display = 'none';
+                                                    }}
+                                                />
+                                            ) : (
+                                                <span className="text-white/30 text-xs">Image</span>
+                                            )}
+                                        </div>
+                                    </div>
                                 </div>
                             ))}
                         </div>
