@@ -11,8 +11,9 @@ export const QuoteDetailPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isEditing, setIsEditing] = useState(false);
-  const [editForm, setEditForm] = useState({ text: '', meaning: '' });
+  const [editForm, setEditForm] = useState({ text: '', meaning: '', imageUrl: '' });
   const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imageInputType, setImageInputType] = useState<'file' | 'url'>('file');
   const [uploadProgress, setUploadProgress] = useState(0);
   const [saving, setSaving] = useState(false);
 
@@ -28,7 +29,7 @@ export const QuoteDetailPage: React.FC = () => {
       const quoteData = await getQuoteById(quoteId);
       setQuote(quoteData);
       if (quoteData) {
-        setEditForm({ text: quoteData.text, meaning: quoteData.meaning });
+        setEditForm({ text: quoteData.text, meaning: quoteData.meaning, imageUrl: quoteData.image_url || '' });
       }
       setError(null);
     } catch (err) {
@@ -46,9 +47,10 @@ export const QuoteDetailPage: React.FC = () => {
   const handleCancelEdit = () => {
     setIsEditing(false);
     if (quote) {
-      setEditForm({ text: quote.text, meaning: quote.meaning });
+      setEditForm({ text: quote.text, meaning: quote.meaning, imageUrl: quote.image_url || '' });
     }
     setImageFile(null);
+    setImageInputType('file');
     setUploadProgress(0);
   };
 
@@ -97,11 +99,15 @@ export const QuoteDetailPage: React.FC = () => {
     setUploadProgress(0);
 
     try {
+      // Get image URL - either from file upload, direct URL input, or keep existing
       let image_url = quote.image_url;
-
-      if (imageFile) {
+      if (imageInputType === 'file' && imageFile) {
         const uploadedUrl = await uploadImage();
-        if (uploadedUrl) image_url = uploadedUrl;
+        if (uploadedUrl) {
+          image_url = uploadedUrl;
+        }
+      } else if (imageInputType === 'url' && editForm.imageUrl.trim()) {
+        image_url = editForm.imageUrl.trim();
       }
 
       await updateQuote(id, {
@@ -114,6 +120,7 @@ export const QuoteDetailPage: React.FC = () => {
       setQuote(updatedQuote);
       setIsEditing(false);
       setImageFile(null);
+      setImageInputType('file');
       setUploadProgress(0);
       alert('Quote updated successfully!');
     } catch (error) {
@@ -143,7 +150,7 @@ export const QuoteDetailPage: React.FC = () => {
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
     setEditForm({
       ...editForm,
       [e.target.name]: e.target.value
@@ -325,29 +332,67 @@ export const QuoteDetailPage: React.FC = () => {
                     <label className="block text-sm font-medium text-gray-300 mb-2">
                       Change Image (Optional)
                     </label>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={handleFileChange}
-                      className="w-full px-4 py-2 bg-[#111827] border border-gray-600 rounded-lg text-white focus:outline-none focus:border-[#4fd1c5] transition-colors file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-[#4fd1c5] file:text-[#1b1b1b] hover:file:bg-[#3db8a8] file:cursor-pointer"
-                    />
-                    {imageFile && (
-                      <p className="text-sm text-gray-400 mt-2">
-                        Selected: {imageFile.name}
-                      </p>
+                    <div className="flex gap-2 mb-3">
+                      <button
+                        type="button"
+                        onClick={() => setImageInputType('file')}
+                        className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                          imageInputType === 'file'
+                            ? 'bg-[#4fd1c5] text-[#1b1b1b]'
+                            : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                        }`}
+                      >
+                        Upload File
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setImageInputType('url')}
+                        className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                          imageInputType === 'url'
+                            ? 'bg-[#4fd1c5] text-[#1b1b1b]'
+                            : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                        }`}
+                      >
+                        Image URL
+                      </button>
+                    </div>
+
+                    {imageInputType === 'file' ? (
+                      <>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={handleFileChange}
+                          className="w-full px-4 py-2 bg-[#111827] border border-gray-600 rounded-lg text-white focus:outline-none focus:border-[#4fd1c5] transition-colors file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-[#4fd1c5] file:text-[#1b1b1b] hover:file:bg-[#3db8a8] file:cursor-pointer"
+                        />
+                        {imageFile && (
+                          <p className="text-sm text-gray-400 mt-2">
+                            Selected: {imageFile.name}
+                          </p>
+                        )}
+                        {uploadProgress > 0 && uploadProgress < 100 && (
+                          <div className="mt-2">
+                            <div className="w-full bg-gray-700 rounded-full h-2">
+                              <div 
+                                className="bg-[#4fd1c5] h-2 rounded-full transition-all duration-300"
+                                style={{ width: `${uploadProgress}%` }}
+                              ></div>
+                            </div>
+                            <p className="text-xs text-gray-400 mt-1">Uploading: {Math.round(uploadProgress)}%</p>
+                          </div>
+                        )}
+                      </>
+                    ) : (
+                      <input
+                        type="url"
+                        name="imageUrl"
+                        value={editForm.imageUrl}
+                        onChange={handleChange}
+                        placeholder="https://example.com/image.jpg"
+                        className="w-full px-4 py-2 bg-[#111827] border border-gray-600 rounded-lg text-white focus:outline-none focus:border-[#4fd1c5] transition-colors"
+                      />
                     )}
-                    {uploadProgress > 0 && uploadProgress < 100 && (
-                      <div className="mt-2">
-                        <div className="w-full bg-gray-700 rounded-full h-2">
-                          <div 
-                            className="bg-[#4fd1c5] h-2 rounded-full transition-all duration-300"
-                            style={{ width: `${uploadProgress}%` }}
-                          ></div>
-                        </div>
-                        <p className="text-xs text-gray-400 mt-1">Uploading: {Math.round(uploadProgress)}%</p>
-                      </div>
-                    )}
-                    {quote.image_url && !imageFile && (
+                    {quote.image_url && imageInputType === 'file' && !imageFile && (
                       <p className="text-xs text-gray-500 mt-1">Current image will be kept if no new image is selected</p>
                     )}
                   </div>
