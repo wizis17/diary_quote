@@ -114,27 +114,31 @@ export const AddQuoteForm: React.FC<{ onQuoteAdded?: () => void }> = ({ onQuoteA
       {!isOpen ? (
         <button
           onClick={() => setIsOpen(true)}
-          className="px-4 py-2 !bg-[#4fd1c5] hover:!bg-[#3db8a8] text-[#1b1b1b] font-semibold rounded-lg transition-colors shadow-lg text-sm"
+          className="px-4 py-2 !bg-[#4fd1c5] text-[#1b1b1b] font-semibold rounded-lg transition-colors shadow-lg text-sm"
         >
           + Add Quote
         </button>
       ) : (
-        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4" onClick={() => setIsOpen(false)}>
-        <div className="max-w-2xl w-full bg-[#1f2937] rounded-xl border border-gray-700 p-8" onClick={(e) => e.stopPropagation()}>
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fadeIn" onClick={() => setIsOpen(false)}>
+        <div className="max-w-2xl w-full bg-gradient-to-br from-[#1f2937] to-[#111827] rounded-2xl border border-gray-700/50 shadow-2xl p-6 sm:p-8 transform transition-all animate-slideUp" onClick={(e) => e.stopPropagation()}>
           <div className="flex justify-between items-center mb-6">
-            <h3 className="text-2xl font-bold text-white">Add New Quote</h3>
+            <div>
+              <h3 className="text-2xl sm:text-3xl font-bold text-white mb-1">Add New Quote</h3>
+              <p className="text-sm text-gray-400">Share your wisdom with the world</p>
+            </div>
             <button
               onClick={() => setIsOpen(false)}
-              className="text-gray-400 hover:text-white text-2xl"
+              className="text-gray-400 rounded-lg p-2 transition-all text-2xl w-10 h-10 flex items-center justify-center"
             >
               ×
             </button>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-5">
             {/* Quote Text */}
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
+              <label className="block text-sm font-semibold text-gray-300 mb-2 flex items-center gap-2">
+                <span className="w-1.5 h-1.5 bg-[#4fd1c5] rounded-full"></span>
                 Quote Text <span className="text-red-400">*</span>
               </label>
               <textarea
@@ -143,14 +147,15 @@ export const AddQuoteForm: React.FC<{ onQuoteAdded?: () => void }> = ({ onQuoteA
                 onChange={handleChange}
                 placeholder="路遥知马力，日久见人心"
                 rows={4}
-                className="w-full px-4 py-2 bg-[#111827] border border-gray-600 rounded-lg text-white text-lg focus:outline-none focus:border-[#4fd1c5] transition-colors resize-none"
+                className="w-full px-4 py-3 bg-[#0d1117] border border-gray-600/50 rounded-xl text-white text-lg focus:outline-none focus:border-[#4fd1c5] focus:ring-2 focus:ring-[#4fd1c5]/20 transition-all resize-none font-chinese placeholder:text-gray-600"
                 required
               />
             </div>
 
             {/* Meaning */}
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
+              <label className="block text-sm font-semibold text-gray-300 mb-2 flex items-center gap-2">
+                <span className="w-1.5 h-1.5 bg-[#4fd1c5] rounded-full"></span>
                 Meaning / Translation <span className="text-red-400">*</span>
               </label>
               <textarea
@@ -159,63 +164,70 @@ export const AddQuoteForm: React.FC<{ onQuoteAdded?: () => void }> = ({ onQuoteA
                 onChange={handleChange}
                 placeholder="Distance tests a horse's strength, time reveals a person's heart"
                 rows={3}
-                className="w-full px-4 py-2 bg-[#111827] border border-gray-600 rounded-lg text-white focus:outline-none focus:border-[#4fd1c5] transition-colors resize-none"
+                className="w-full px-4 py-3 bg-[#0d1117] border border-gray-600/50 rounded-xl text-white focus:outline-none focus:border-[#4fd1c5] focus:ring-2 focus:ring-[#4fd1c5]/20 transition-all resize-none placeholder:text-gray-600"
                 required
               />
             </div>
 
             {/* Image Input Type Toggle */}
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
+              <label className="block text-sm font-semibold text-gray-300 mb-3 flex items-center gap-2">
+                <span className="w-1.5 h-1.5 bg-gray-500 rounded-full"></span>
                 Image (Optional)
               </label>
-              <div className="flex gap-2 mb-3">
+              <div className="flex gap-2 mb-3 bg-gray-800/50 p-1 rounded-xl">
                 <button
                   type="button"
                   onClick={() => setImageInputType('file')}
-                  className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                  className={`flex-1 px-4 py-2.5 rounded-lg font-medium transition-all ${
                     imageInputType === 'file'
-                      ? 'bg-[#4fd1c5] text-[#1b1b1b]'
-                      : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                      ? 'bg-[#4fd1c5] text-[#1b1b1b] shadow-lg shadow-[#4fd1c5]/20'
+                      : 'bg-transparent text-gray-400'
                   }`}
                 >
-                  Upload File
+                  📁 Upload File
                 </button>
                 <button
                   type="button"
                   onClick={() => setImageInputType('url')}
-                  className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                  className={`flex-1 px-4 py-2.5 rounded-lg font-medium transition-all ${
                     imageInputType === 'url'
-                      ? 'bg-[#4fd1c5] text-[#1b1b1b]'
-                      : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                      ? 'bg-[#4fd1c5] text-[#1b1b1b] shadow-lg shadow-[#4fd1c5]/20'
+                      : 'bg-transparent text-gray-400'
                   }`}
                 >
-                  Image URL
+                  🔗 Image URL
                 </button>
               </div>
 
               {imageInputType === 'file' ? (
                 <>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleFileChange}
-                    className="w-full px-4 py-2 bg-[#111827] border border-gray-600 rounded-lg text-white focus:outline-none focus:border-[#4fd1c5] transition-colors file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-[#4fd1c5] file:text-[#1b1b1b] hover:file:bg-[#3db8a8] file:cursor-pointer"
-                  />
+                  <div className="relative">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleFileChange}
+                      className="w-full px-4 py-3 bg-[#0d1117] border border-gray-600/50 rounded-xl text-white focus:outline-none focus:border-[#4fd1c5] focus:ring-2 focus:ring-[#4fd1c5]/20 transition-all file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-[#4fd1c5] file:text-[#1b1b1b] file:cursor-pointer file:transition-colors"
+                    />
+                  </div>
                   {imageFile && (
-                    <p className="text-sm text-gray-400 mt-2">
-                      Selected: {imageFile.name}
-                    </p>
+                    <div className="mt-2 flex items-center gap-2 text-sm text-[#4fd1c5] bg-[#4fd1c5]/10 px-3 py-2 rounded-lg">
+                      <span>✓</span>
+                      <span className="truncate">Selected: {imageFile.name}</span>
+                    </div>
                   )}
                   {uploadProgress > 0 && uploadProgress < 100 && (
-                    <div className="mt-2">
-                      <div className="w-full bg-gray-700 rounded-full h-2">
+                    <div className="mt-3 space-y-2">
+                      <div className="flex justify-between text-xs text-gray-400">
+                        <span>Uploading...</span>
+                        <span>{Math.round(uploadProgress)}%</span>
+                      </div>
+                      <div className="w-full bg-gray-800 rounded-full h-2 overflow-hidden">
                         <div 
-                          className="bg-[#4fd1c5] h-2 rounded-full transition-all duration-300"
+                          className="bg-gradient-to-r from-[#4fd1c5] to-[#3db8a8] h-2 rounded-full transition-all duration-300 shadow-lg shadow-[#4fd1c5]/30"
                           style={{ width: `${uploadProgress}%` }}
                         ></div>
                       </div>
-                      <p className="text-xs text-gray-400 mt-1">Uploading: {Math.round(uploadProgress)}%</p>
                     </div>
                   )}
                 </>
@@ -226,24 +238,32 @@ export const AddQuoteForm: React.FC<{ onQuoteAdded?: () => void }> = ({ onQuoteA
                   value={formData.imageUrl}
                   onChange={handleChange}
                   placeholder="https://example.com/image.jpg"
-                  className="w-full px-4 py-2 bg-[#111827] border border-gray-600 rounded-lg text-white focus:outline-none focus:border-[#4fd1c5] transition-colors"
+                  className="w-full px-4 py-3 bg-[#0d1117] border border-gray-600/50 rounded-xl text-white focus:outline-none focus:border-[#4fd1c5] focus:ring-2 focus:ring-[#4fd1c5]/20 transition-all placeholder:text-gray-600"
                 />
               )}
             </div>
 
             {/* Buttons */}
-            <div className="flex gap-4 pt-4">
+            <div className="flex gap-3 pt-4">
               <button
                 type="submit"
                 disabled={loading}
-                className="flex-1 px-6 py-3 !bg-[#4fd1c5] hover:!bg-[#3db8a8] text-[#1b1b1b] font-semibold rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex-1 px-6 py-3.5 bg-gradient-to-r from-[#4fd1c5] to-[#3db8a8] text-[#1b1b1b] font-bold rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-[#4fd1c5]/30 active:scale-[0.98]"
               >
-                {loading ? 'Adding...' : 'Add Quote'}
+                {loading ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Adding...
+                  </span>
+                ) : '✨ Add Quote'}
               </button>
               <button
                 type="button"
                 onClick={() => setIsOpen(false)}
-                className="px-6 py-3 bg-gray-700 hover:bg-gray-600 text-white font-semibold rounded-lg transition-colors"
+                className="px-6 py-3.5 bg-gray-700/50 text-white font-semibold rounded-xl transition-all border border-gray-600/50"
               >
                 Cancel
               </button>
