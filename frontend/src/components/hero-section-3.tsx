@@ -130,7 +130,7 @@ const CollectionPreview = () => {
                         <p className="text-gray-400 text-lg mb-6">No quotes in collection yet.</p>
                         <button
                             onClick={() => navigate('/collection')}
-                            className="px-8 py-3 bg-[#4fd1c5] hover:bg-[#3db8a8] text-[#1b1b1b] font-semibold rounded-lg transition-colors shadow-lg"
+                            className="text-[#4fd1c5] font-medium text-sm underline underline-offset-4 transition-opacity bg-transparent border-0 cursor-pointer"
                         >
                             View All 
                         </button>
@@ -176,9 +176,9 @@ const CollectionPreview = () => {
                         <div className="text-center">
                             <button
                                 onClick={() => navigate('/collection')}
-                                className="px-8 py-3 bg-[#4fd1c5] hover:bg-[#3db8a8] text-[#1b1b1b] font-semibold rounded-lg transition-colors shadow-lg"
+                                className="text-gray-400 font-medium text-sm underline underline-offset-4 transition-opacity bg-transparent border-0 cursor-pointer"
                             >
-                                View All Quotes
+                                View All
                             </button>
                         </div>
                     </>
