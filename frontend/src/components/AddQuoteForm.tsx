@@ -116,7 +116,7 @@ export const AddQuoteForm: React.FC<{ onQuoteAdded?: () => void }> = ({ onQuoteA
           onClick={() => setIsOpen(true)}
           className="px-4 py-2 !bg-[#4fd1c5] text-[#1b1b1b] font-semibold rounded-lg transition-colors shadow-lg text-sm"
         >
-          + Add Quote
+          +
         </button>
       ) : (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fadeIn" onClick={() => setIsOpen(false)}>
