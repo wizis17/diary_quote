@@ -276,7 +276,7 @@ export const QuoteDetailPage: React.FC = () => {
                   <h2 className="text-sm font-semibold text-[#4fd1c5] mb-3 uppercase tracking-wide">
                     Quote
                   </h2>
-                  <h1 className="text-4xl md:text-5xl font-bold text-white leading-loose font-chinese">
+                  <h1 className="text-2xl md:text-3xl font-bold text-white leading-[3] font-chinese">
                     {quote.text}
                   </h1>
                 </div>
